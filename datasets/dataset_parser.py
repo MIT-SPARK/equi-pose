@@ -23,39 +23,74 @@ from datasets.nocs_real import NOCSDatasetReal
 from common.debugger import *
 from common import vis_utils
 
+# import sys
+# sys.path.append("../..")
+from utils_conversion import ShapeNet, YCB
+
 epsilon = 10e-8
 infos     = global_info()
 second_path = infos.second_path
 project_path= infos.project_path
+
 
 def get_dataset(cfg,
                 name_dset,
                 split,
                 train_it=True,
                 use_cache=True):
-    if name_dset == 'modelnet40_complete':
-        print('using modelnet40 data ', split)
-        return ModelNet40Complete(opt=cfg, mode=split)
 
-    elif name_dset == 'modelnet40_partial':
-        print('using modelnet40 data, new ', split)
-        return ModelNet40Partial(cfg=cfg, mode=split)
+    if cfg.new_dataset:
+        if name_dset.split('.')[0] == "shapenet":
+            type = name_dset.split('.')[1]
+            adv_option = name_dset.split('.')[2]
+            object = name_dset.split('.')[3]
+            print(f"using {str(name_dset)} dataset: ", split)
+            return ShapeNet(type=type,
+                            object=object,
+                            split=split,
+                            num_points=cfg.out_points,
+                            adv_option=adv_option)
 
-    elif name_dset == 'nocs_synthetic':
-        print('using nocs_synthetic data ', split)
-        return NOCSDataset(cfg=cfg, root=cfg.DATASET.data_path, split=split)
-
-    elif name_dset == 'nocs_real':
-        if 'train' in split:
-            split = 'real_train'
+        elif name_dset.split('.')[0] == "ycb":
+            type = name_dset.split('.')[1]
+            object = name_dset.split('.')[2]
+            print(f"using {str(name_dset)} dataset: ", split)
+            return YCB(type=type, object=object, split=split, num_points=cfg.out_points)
         else:
-            split = 'real_test'
-        print('using nocs_neweer data ', split_folder)
-        return NOCSDatasetReal(cfg=cfg, root=cfg.DATASET.data_path, split=split_folder)
+            raise ValueError("new_dataset not specified correctly.")
+
+    else:
+        if name_dset == 'modelnet40_complete':
+            print('using modelnet40 data ', split)
+            return ModelNet40Complete(opt=cfg, mode=split)
+
+        elif name_dset == 'modelnet40_partial':
+            print('using modelnet40 data, new ', split)
+            return ModelNet40Partial(cfg=cfg, mode=split)
+
+        elif name_dset == 'nocs_synthetic':
+            print('using nocs_synthetic data ', split)
+            return NOCSDataset(cfg=cfg, root=cfg.DATASET.data_path, split=split)
+
+        elif name_dset == 'nocs_real':
+            if 'train' in split:
+                split = 'real_train'
+            else:
+                split = 'real_test'
+            print('using nocs_neweer data ', split_folder)
+            return NOCSDatasetReal(cfg=cfg, root=cfg.DATASET.data_path, split=split_folder)
+        else:
+            raise ValueError("name_dset not specified correctly.")
+
 
 class DatasetParser(Parser):
     def __init__(self, cfg, mode='train', return_loader=True, domain=None, first_n=-1, add_noise=False, fixed_order=False, num_expr=0.01):
-        name_dset  = cfg.name_dset
+
+        if cfg.new_dataset:
+            name_dset = cfg.new_dataset
+        else:
+            name_dset = cfg.name_dset
+
         print('name_dset', name_dset)
         collate = None
         self.train_dataset = get_dataset(
@@ -95,6 +130,7 @@ class DatasetParser(Parser):
             self.validloader = None
             self.trainloader = None
         self.testloader = None
+
 
 @hydra.main(config_path="../config/completion.yaml")
 def main(cfg):

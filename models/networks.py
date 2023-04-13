@@ -1,5 +1,5 @@
 import numpy as np
-from math import pi ,sin, cos, sqrt
+from math import pi, sin, cos, sqrt
 
 import torch
 import torch.nn as nn
@@ -9,12 +9,14 @@ from importlib import import_module
 import __init__
 from common.debugger import *
 
+
 class PointAE(nn.Module):
     def __init__(self, cfg):
         super(PointAE, self).__init__()
         self.encoder_type = cfg.encoder_type
         self.decoder_type = cfg.decoder_type
 
+        # breakpoint()
         if 'so3net' in self.encoder_type:
             module = import_module('models')
             param_outfile = None

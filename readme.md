@@ -68,8 +68,7 @@ python main.py exp_num=[experiment_id] training=[name_training] datasets=[name_d
 For example, to test the model on complete airplane category or partial airplane, you may run
 
 ```bash
-python main.py exp_num='0.813' training="complete_pcloud" dataset="modelnet40_complete" category='airplane'
-eval=True save=True
+python main.py exp_num='0.813' training="complete_pcloud" dataset="modelnet40_complete" category='airplane' eval=True save=True
 
 ```
 

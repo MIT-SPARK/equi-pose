@@ -40,6 +40,7 @@ class BaseAgent(object):
     def __init__(self, cfg):
         self.log_dir = cfg.log_dir
         self.model_dir = cfg.model_dir
+        self.ckpt = cfg.ckpt
         self.clock      = TrainClock()
         self.batch_size = cfg.batch_size
         self.use_wandb  = cfg.use_wandb
@@ -210,7 +211,7 @@ class BaseAgent(object):
         """one step of training"""
         self.net.train()
         self.is_testing = False
-
+        # breakpoint()
         self.forward(data)
         losses = self.collect_loss()
         infos  = self.collect_info()

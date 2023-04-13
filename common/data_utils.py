@@ -24,7 +24,7 @@ import glob
 import platform
 import xml.etree.ElementTree as ET
 from xml.etree.ElementTree import Element, tostring, SubElement, Comment, ElementTree, XML
-from oiio import OpenImageIO as oiio
+# from oiio import OpenImageIO as oiio
 
 import __init__
 from common.transformations import euler_matrix, quaternion_matrix, quaternion_from_matrix
@@ -164,7 +164,8 @@ class IO:
         """
         Z : Depth buffer in float32 format or None if the EXR file has no Z channel.
         """
-        inbuf=oiio.ImageInput.open(filename)
+        breakpoint()
+        # inbuf=oiio.ImageInput.open(filename)
         img  = inbuf.read_image()
         Z = None
         inbuf.close()

@@ -13,6 +13,7 @@ def get_agent(cfg):
     else:
         raise ValueError
 
+
 def set_requires_grad(nets, requires_grad=False):
     """Set requies_grad=Fasle for all the networks to avoid unnecessary computations
     Parameters:

@@ -22,8 +22,10 @@ project_path    = infos.project_path
 delta_R         = infos.delta_R
 delta_T         = infos.delta_T
 
+
 def bp():
     import pdb;pdb.set_trace()
+
 
 class EquivariantPose(BaseAgent):
     def __init__(self, cfg):
@@ -33,7 +35,7 @@ class EquivariantPose(BaseAgent):
 
     def build_net(self, cfg):
         net = get_network(cfg, "pointAE")
-        print(net)
+        # print(net)
         if cfg.parallel:
             net = nn.DataParallel(net)
         net = net.cuda()
@@ -42,6 +44,7 @@ class EquivariantPose(BaseAgent):
     def forward(self, data, verbose=False):
         self.infos    = {}
         self.synchronize(data) #
+        # breakpoint()
         self.predict(data)
         self.ssl_rt(data)
 
@@ -64,6 +67,7 @@ class EquivariantPose(BaseAgent):
         input_pts = data['xyz'].permute(0, 2, 1).contiguous()
         input_pts = input_pts - input_pts.mean(dim=-1, keepdim=True)
 
+        # breakpoint()
         self.latent_vect = self.net.encoder(input_pts)
         self.output_T    = self.latent_vect['T']  # 3, N, no activation
         if 'completion' in self.cfg.task:
@@ -84,8 +88,8 @@ class EquivariantPose(BaseAgent):
         BS, N = target_pts.shape[0:2]
         self.threshold = 1.0
         nb, nr, na = self.latent_vect['R'].shape  #
-        r_gt        = data['R_gt'].float() # GT R,torch.Size([2, 3, 3])
-        rlabel_gt   = data['R_label'].view(-1).contiguous()   # GT R label, torch.Size([2])
+        # r_gt        = data['R_gt'].float() # GT R,torch.Size([2, 3, 3])
+        # rlabel_gt   = data['R_label'].view(-1).contiguous()   # GT R label, torch.Size([2])
         ranchor_gt  = data['R'].float() # GT relative R, torch.Size([2, 60, 3, 3])
         with torch.no_grad():
             ranchor_gt_quat = matrix_to_unit_quaternion(ranchor_gt)
@@ -175,8 +179,8 @@ class EquivariantPose(BaseAgent):
                 self.t_pred = None
 
         self.infos["recon"] = self.recon_loss
-        if self.cfg.eval:
-            print('chamferL1', torch.sqrt(self.recon_loss))
+        # if self.cfg.eval:
+            # print('chamferL1', torch.sqrt(self.recon_loss))
 
     def eval_func(self, data):
         self.net.eval()

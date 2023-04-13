@@ -24,8 +24,8 @@ device: ''
 
 # input, output data, general
 use_fps_points: False
-batch_size: 4
-test_batch: 4
+batch_size: 1 #4
+test_batch: 1 #4
 in_points: 1024
 out_points: 1024
 normalize_scale: False
@@ -52,3 +52,9 @@ use_wandb: False
 save_fig: False
 show_fig: False
 viz: False
+
+# added
+new_dataset: ''
+analyze_data: False
+writer: False
+final: False

@@ -5,16 +5,23 @@ import platform
 import collections
 import numpy as np
 
+from pathlib import Path
+
+SOURCE = Path(__file__).parent.parent
+
+
 def bp():
     import pdb;pdb.set_trace()
+
 
 class global_info(object):
     def __init__(self):
         self.name      = 'art6d'
         self.model_type= 'so3net'
 
-        second_path = 'please set this!!!'
-        project_path= 'please set this!!!'
+        source = str(SOURCE)
+        second_path = source + '/logs'
+        project_path = source
         if 'dragon' in platform.uname()[1]:
             second_path = '/home/dragonx/Dropbox/neurips21'
             project_path = '/home/dragonx/Dropbox/neurips21/code'
@@ -103,6 +110,7 @@ class global_info(object):
                 delta_T[f'{exp_num}_{name_dset}_{category}'] = rt_dict['delta_t'].reshape(1, 3)
         self.delta_R = delta_R
         self.delta_T = delta_T
+
 
 if __name__ == '__main__':
     infos = global_info()

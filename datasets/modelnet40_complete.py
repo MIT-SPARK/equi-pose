@@ -10,8 +10,11 @@ import vgtk.pc as pctk
 import vgtk.so3conv.functional as L
 from vgtk.functional import rotation_distance_np
 import random
+
+
 def bp():
     import pdb;pdb.set_trace()
+
 
 class ModelNet40Complete(data.Dataset):
     def __init__(self, opt, mode=None):
@@ -89,6 +92,7 @@ class ModelNet40Complete(data.Dataset):
         else:
             T = T * 0
         num_index = self.all_data[index].split('/')[-1].split('.')[0].split('_')[-1]
+
         return {'xyz': torch.from_numpy(pc.astype(np.float32)),
                 'points': torch.from_numpy(pc_canon.astype(np.float32)),
                 'label': torch.from_numpy(data['label'].flatten()).long(),
@@ -101,6 +105,7 @@ class ModelNet40Complete(data.Dataset):
                 'idx': num_index,
                 'class': self.all_data[index].split('/')[-3]
                }
+
 
 if __name__ == '__main__':
     from models.spconv.options import opt

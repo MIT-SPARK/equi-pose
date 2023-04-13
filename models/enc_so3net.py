@@ -84,6 +84,7 @@ class InvSO3ConvModel(nn.Module):
 
     def forward(self, x):
         # nb, np, 3 -> [nb, 3, np] x [nb, 1, np, na]
+        # breakpoint()
         if x.shape[-1] > 3:
             x = x.permute(0, 2, 1).contiguous()
         x = M.preprocess_input(x, self.na_in, False)

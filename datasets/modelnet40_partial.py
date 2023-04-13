@@ -12,12 +12,16 @@ from os.path import join as pjoin
 import matplotlib.pyplot as plt
 import __init__
 
+from pathlib import Path
+
 try:
     import vgtk.so3conv.functional as L
     import vgtk.pc as pctk
 except:
     pass
 from datasets.modelnet40partial_render import backproject
+
+BASE_DIR = Path(__file__).parent.parent.parent
 
 def bp():
     import pdb;pdb.set_trace()
@@ -85,7 +89,8 @@ class ModelNet40Partial(data.Dataset):
         self.add_noise = cfg.DATASET.add_noise
         self.noise_trans = cfg.DATASET.noise_trans
 
-        self.dataset_path = cfg.DATASET.dataset_path
+        # breakpoint()
+        self.dataset_path = str(BASE_DIR) + cfg.DATASET.dataset_path
         self.render_path = pjoin(self.dataset_path, 'render', cfg.category, self.mode)
         self.points_path = pjoin(self.dataset_path, 'points', cfg.category, self.mode)
 
